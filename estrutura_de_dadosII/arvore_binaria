@@ -1,0 +1,138 @@
+#implementação da arvore binária:
+
+class Arvore_BB:
+    def __init__(self):
+        self.raiz = None
+
+
+#implementação do nó:
+
+class Pessoa:
+    def __init__(self, nome, idade):
+        self.nome = nome
+        self.idade = idade
+        self.esquerda = None
+        self.direita = None
+
+
+#implementação da inserção de dados:
+
+class ArvoreBB:
+    def __init__(self):
+        self.raiz = None
+
+    def inserir(self, nome, idade):
+        nova_pessoa = Pessoa(nome, idade)
+
+        if self.raiz is None:
+            self.raiz = nova_pessoa
+        else:
+            self._inserir_invertido(self.raiz, nova_pessoa)
+
+    def _inserir_invertido(self, atual, nova_pessoa):
+        if nova_pessoa.idade < atual.idade:
+            if atual.esquerda is None:
+                atual.esquerda = nova_pessoa
+            else:
+                self._inserir_invertido(atual.esquerda, nova_pessoa)
+
+        elif nova_pessoa.idade > atual.idade:
+            if atual.direita is None:
+                atual.direita = nova_pessoa
+            else:
+                self._inserir_invertido(atual.direita, nova_pessoa)
+
+        else: 
+            if nova_pessoa.nome < atual.nome:
+                if atual.esquerda is None:
+                    atual.esquerda = nova_pessoa
+                else:
+                    self._inserir_invertido(atual.esquerda, nova_pessoa)
+            else:
+                if atual.direita is None:
+                    atual.direita = nova_pessoa
+                else:
+                    self._inserir_invertido(atual.direita, nova_pessoa)
+
+
+#implementação dos percursos:
+
+    def em_ordem(self, nodo):
+        if nodo:
+            self.em_ordem(nodo.esquerda)
+            print(f"{nodo.nome} - {nodo.idade}")
+            self.em_ordem(nodo.direita)
+
+    def pre_ordem(self, nodo):
+        if nodo:
+            print(f"{nodo.nome} - {nodo.idade}")
+            self.pre_ordem(nodo.esquerda)
+            self.pre_ordem(nodo.direita)
+
+    def pos_ordem(self, nodo):
+        if nodo:
+            self.pos_ordem(nodo.esquerda)
+            self.pos_ordem(nodo.direita)
+            print(f"{nodo.nome} - {nodo.idade}")
+
+
+#implementação do percurso em ordem invertido:
+
+    def em_ordem_invertido(self, nodo):
+        if nodo:
+            self.em_ordem_invertido(nodo.direita)
+            print(f"{nodo.nome} - {nodo.idade}")
+            self.em_ordem_invertido(nodo.esquerda)
+
+
+#implementação do percurso em largura:
+
+    def em_largura(self):
+        if self.raiz is None:
+            return
+
+        fila = [self.raiz]
+
+        while fila:
+            atual = fila.pop(0)
+            print(f"{atual.nome} - {atual.idade}")
+
+            if atual.esquerda:
+                fila.append(atual.esquerda)
+            if atual.direita:
+                fila.append(atual.direita)
+
+
+#populando a árvore com dados de exemplo:
+
+arvore = ArvoreBB()
+
+arvore.inserir("Ana Beatriz", 36)
+arvore.inserir("Fernando", 25)
+arvore.inserir("Charles", 41)
+arvore.inserir("Diana", 35)
+arvore.inserir("Eduardo", 19)
+arvore.inserir("Fernanda", 28)
+arvore.inserir("Gustavo", 30)
+arvore.inserir("Helena", 22)
+arvore.inserir("Vitor", 48)
+arvore.inserir("Julia", 27)
+arvore.inserir("Anderson", 58)
+
+
+#impressão da arvore:
+
+print("\n---->> Em Ordem Crescente <<----")
+arvore.em_ordem(arvore.raiz)
+
+print("\n---->> Pré-Ordem <<----")
+arvore.pre_ordem(arvore.raiz)
+
+print("\n---->> Pós-Ordem <<----")
+arvore.pos_ordem(arvore.raiz)
+
+print("\n---->> Em Ordem Invertida Decrescente <<----")
+arvore.em_ordem_invertido(arvore.raiz)
+
+print("\n---->> Percurso em Largura <<----")
+arvore.em_largura()

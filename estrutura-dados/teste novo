@@ -1,0 +1,126 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+//lista encadeada para fila de clientes
+typedef struct No {
+    int numero;          
+    char prioridade;    
+    struct No *prox;    
+} No;
+
+No *head = NULL; 
+
+int proximoComum = 1;
+int proximoPrioritario = 301;
+
+//inserir clientes sem prioridades
+void inserirSemPrioridade(No* novo) {
+    if (head == NULL) {
+        head = novo;
+    } else {
+        No* temp = head;
+        while (temp->prox != NULL)
+            temp = temp->prox;
+        temp->prox = novo;
+    }
+}
+
+// inserir clientes com prioridade
+void inserirComPrioridade(No* novo) {
+    if (head == NULL) {
+        head = novo;
+        return;
+    }
+
+    if (head->prioridade == 'C') {
+        novo->prox = head;
+        head = novo;
+        return;
+    }
+
+    No* temp = head;
+    while (temp->prox != NULL && temp->prox->prioridade == 'P')
+        temp = temp->prox;
+
+    
+    novo->prox = temp->prox;
+    temp->prox = novo;
+}
+
+//função para inserir novo cliente na fila
+void inserir() {
+    char tipo;
+    printf("\nDigite o tipo de senha: P -> PRIORITÁRIO, C -> COMUM: ");
+    scanf(" %c", &tipo);
+
+    No* novo = (No*)malloc(sizeof(No));
+    novo->prox = NULL;
+
+    if (tipo == 'P' || tipo == 'p') {
+        novo->prioridade = 'P';
+        novo->numero = proximoPrioritario++;
+        inserirComPrioridade(novo);
+        printf("Senha P%d adicionada!\n", novo->numero);
+    } else if (tipo == 'C' || tipo == 'c') {
+        novo->prioridade = 'C';
+        novo->numero = proximoComum++;
+        inserirSemPrioridade(novo);
+        printf("Senha C%d adicionada!\n", novo->numero);
+    } else {
+        printf("Tipo inválido! Use P ou C.\n");
+        free(novo);
+    }
+}
+
+
+void imprimirFilaClientes() {
+    if (head == NULL) {
+        printf("\nFila vazia!\n");
+        return;
+    }
+
+    No* temp = head;
+    printf("\n--- FILA DE CLIENTES ---\n");
+    while (temp != NULL) {
+        printf("Senha %c%d\n", temp->prioridade, temp->numero);
+        temp = temp->prox;
+    }
+}
+
+void atenderCliente() {
+    if (head == NULL) {
+        printf("\nNenhum cliente na fila.\n");
+        return;
+    }
+
+    No* temp = head;
+    printf("\nClente: Senha %c%d\n", temp->prioridade, temp->numero);
+    head = head->prox;
+    free(temp);
+}
+//imprimir o menu principal
+void menu() {
+    int opcao;
+    do {
+        printf("\n--------------> MENU <--------------\n");
+        printf("Adicionar o cliente à fila - Digite 1\n");
+        printf("Mostrar a fila de clientes - Digite 2\n");
+        printf("Chamar o próximo cliente - Digite 3\n");
+        printf("Sair - Digite 4\n");
+        printf("Digite uma das opções acima: ");
+        scanf("%d", &opcao);
+
+        switch(opcao) {
+            case 1: inserir(); break;
+            case 2: imprimirFilaClientes(); break;
+            case 3: atenderCliente(); break;
+            case 4: printf("\nFinalizando o programa...\n"); break;
+            default: printf("\nOpção inválida! Tente novamente.\n");
+        }
+    } while (opcao != 4);
+}
+
+int main() {
+    menu();
+    return 0;
+}
